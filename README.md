@@ -1,8 +1,8 @@
-# KDU Study
+# KDU Finals Island
 
-Clean mobile-first KDU finals trainer for MCQs, SEQs/CQs, live cases, review, and a local knowledge graph.
+KDU Finals Island is the island-themed rebuild of the KDU final MBBS study app: a mobile-first study experience that keeps the serious exam workflow while wrapping it in a calm tropical survival-island interface.
 
-This is the non-RPG study app. It intentionally preserves the existing KDU save schema so progress can be reused.
+The rebuild is designed around daily finals survival: MCQs become supplies, SEQs and clinical cases build the island clinic, weak concepts become Danger Zones, SRS reviews return like enemies to clear, and the Study Forest shows durable progress over time.
 
 ## What It Does
 
@@ -10,7 +10,8 @@ This is the non-RPG study app. It intentionally preserves the existing KDU save 
 - MR scoring uses KDU-style `+1` correct, `-1` wrong, `0` skipped.
 - Spoken SEQ/CQ answer capture through Groq Whisper proxy, with editable transcript and AI marking hook.
 - Live OSCE-style cases where the AI can act as patient and examiner.
-- Review queue from weak items and SRS due dates.
+- Today's Survival Tasks for daily MCQs, clinical SEQ/case work, weak review clearance, and safe-day progress.
+- Study Forest, Danger Zones, Practice Bank, Written Prep, Live OSCE, SRS Scheduler, Clinical Topic Atlas, Review, and Sync areas.
 - Local Obsidian-like knowledge graph from question stems, tags, notes, mistakes, cases, and RAG chunks.
 - Offline-first IndexedDB persistence.
 - Cloudflare Worker sync with the existing save blob/passphrase contract.
@@ -18,7 +19,9 @@ This is the non-RPG study app. It intentionally preserves the existing KDU save 
 
 ## Progress Compatibility
 
-The app deliberately uses the existing IndexedDB database and keys:
+The product-facing name is now **KDU Finals Island**, but the rebuild deliberately preserves the old `kdu_v2_*` progress records and the existing IndexedDB database/store. This task does **not** rename storage keys, reset progress, or change the save schema.
+
+The app continues to use:
 
 - Database/store: `kdu-finals-rpg` / `keyval`
 - `kdu_v2_settings`
@@ -28,6 +31,8 @@ The app deliberately uses the existing IndexedDB database and keys:
 - `kdu_v2_seq`
 - `kdu_v2_cases`
 - `kdu_v2_log`
+- `kdu_v2_weak_concepts`
+- `kdu_v2_focus`
 
 If this app runs on the same browser origin as the old app, local progress can appear automatically. If it runs on a new origin, use the same Cloudflare sync endpoint and passphrase in Settings.
 

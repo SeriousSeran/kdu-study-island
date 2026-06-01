@@ -13,7 +13,9 @@ test("package exposes portable production scripts and local fallback scripts", (
 test("PWA manifest and service worker cache core offline banks", () => {
   const manifest = JSON.parse(fs.readFileSync("public/manifest.json", "utf8"));
   const sw = fs.readFileSync("public/sw.js", "utf8");
-  assert.equal(manifest.name, "KDU Study");
+  assert.equal(manifest.name, "KDU Finals Island");
+  assert.equal(manifest.short_name, "Finals Island");
+  assert.match(manifest.description, /island survival study dashboard/);
   assert.match(sw, /req\.mode === "navigate"/);
   for (const file of ["/questions.js", "/seqBank.js", "/ocrMcqBank.js", "/caseBank.js", "/ragIndex.js"]) {
     assert.match(sw, new RegExp(file.replace(".", "\\.")));

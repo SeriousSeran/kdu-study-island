@@ -1,13 +1,18 @@
 {
-  "name": "KDU Study",
-  "short_name": "KDU Study",
-  "description": "Clean mobile-first KDU finals trainer for MCQs, SEQs, cases, and review",
+  "name": "KDU Finals Island",
+  "short_name": "Finals Island",
+  "description": "Mobile-first KDU MBBS finals trainer with an island survival study dashboard, MCQs, SEQs, cases, and review.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#f7f9ff",
-  "theme_color": "#2563eb",
+  "background_color": "#0f8fa7",
+  "theme_color": "#0d6f7b",
   "icons": [
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
   ]
 }
