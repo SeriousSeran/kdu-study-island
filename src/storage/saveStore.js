@@ -27,6 +27,7 @@ export const DEFAULT_PROFILE = {
   hearts: 5,
   badges: [],
   customVideos: [],
+  dailyProgress: {},
 };
 
 export const DEFAULT_SETTINGS = {
@@ -116,7 +117,7 @@ export async function loadSaveState() {
   ]);
   return {
     settings: { ...DEFAULT_SETTINGS, ...(settings || {}) },
-    profile: { ...DEFAULT_PROFILE, ...(profile || {}) },
+    profile: normalizeProfile(profile),
     attempts: attempts || {},
     notes: notes || {},
     seqAnswers: seqAnswers || {},
@@ -134,6 +135,15 @@ export function saveKey(name, value) {
   return idbKeyval.set(KEYS[name], value, IDB_STORE);
 }
 
-export function todayKey(now = new Date()) {
-  return now.toISOString().slice(0, 10);
+export { todayKey } from "./dailyProgress.js";
+
+export function normalizeProfile(profile = {}) {
+  return {
+    ...DEFAULT_PROFILE,
+    ...(profile || {}),
+    dailyProgress: {
+      ...DEFAULT_PROFILE.dailyProgress,
+      ...((profile && profile.dailyProgress) || {}),
+    },
+  };
 }
