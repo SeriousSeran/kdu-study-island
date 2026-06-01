@@ -562,3 +562,135 @@ body:has(.island-dashboard) {
 @keyframes islandDangerPulse {
   50% { transform: scale(1.08); box-shadow: 0 0 0 12px rgba(239, 68, 68, .12); }
 }
+
+/* Dependency-free hero scene for Cloudflare Pages: keeps the island readable even when game packages are unavailable. */
+.island-css-scene {
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.island-css-scene .wave {
+  position: absolute;
+  left: 20px;
+  width: 56px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(236, 254, 255, .46);
+  box-shadow: 86px 24px 0 rgba(236, 254, 255, .34), 174px -8px 0 rgba(236, 254, 255, .3);
+}
+
+.island-css-scene .wave-one { top: 58px; }
+.island-css-scene .wave-two { top: 122px; left: 58px; opacity: .7; }
+
+.island-css-scene .sun.urgent {
+  background: #fb923c;
+  box-shadow: 0 0 0 10px rgba(251, 146, 60, .2), 0 0 34px rgba(251, 146, 60, .5);
+}
+
+.island-css-scene .forest {
+  display: block;
+  background: none;
+  filter: drop-shadow(0 7px 0 rgba(20, 83, 45, .18));
+}
+
+.island-css-scene .tree {
+  position: absolute;
+  width: 20px;
+  height: 36px;
+}
+
+.island-css-scene .tree::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  bottom: 0;
+  width: 5px;
+  height: 16px;
+  border-radius: 2px;
+  background: #7c4a22;
+}
+
+.island-css-scene .tree::after {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 0;
+  width: 20px;
+  height: 24px;
+  border-radius: 50% 50% 46% 46%;
+  background: linear-gradient(180deg, #4ade80, #15803d);
+  box-shadow: inset 0 4px 0 rgba(255, 255, 255, .18);
+}
+
+.island-css-scene .clinic .campfire {
+  position: absolute;
+  left: 48px;
+  bottom: -18px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50% 50% 48% 48%;
+  background: linear-gradient(180deg, #cbd5e1, #64748b);
+  transform: rotate(45deg);
+  box-shadow: 0 10px 0 -5px #7c2d12;
+}
+
+.island-css-scene .clinic .campfire.lit {
+  background: linear-gradient(180deg, #fef08a 0 40%, #fb923c 41% 100%);
+  box-shadow: 0 0 18px rgba(251, 146, 60, .55), 0 10px 0 -5px #7c2d12;
+}
+
+.island-css-scene .supplies {
+  position: absolute;
+  left: 176px;
+  bottom: 64px;
+  width: 74px;
+  height: 34px;
+}
+
+.island-css-scene .supply {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 55% 45% 55% 45%;
+  background: linear-gradient(180deg, #fde047, #f97316);
+  border: 2px solid rgba(124, 45, 18, .18);
+}
+
+.island-css-scene .danger-zones {
+  position: absolute;
+  right: 20px;
+  bottom: 88px;
+  width: 76px;
+  height: 56px;
+}
+
+.island-css-scene .danger-zones .danger-zone {
+  right: auto;
+  bottom: auto;
+  width: 22px;
+  height: 22px;
+  border-width: 2px;
+  box-shadow: 0 0 0 5px rgba(239, 68, 68, .18);
+}
+
+.island-css-scene .tree:nth-child(4n + 1) { left: 0; }
+.island-css-scene .tree:nth-child(4n + 2) { left: 24px; }
+.island-css-scene .tree:nth-child(4n + 3) { left: 48px; }
+.island-css-scene .tree:nth-child(4n + 4) { left: 72px; }
+.island-css-scene .tree:nth-child(n + 1):nth-child(-n + 4) { top: 4px; }
+.island-css-scene .tree:nth-child(n + 5):nth-child(-n + 8) { top: 24px; }
+.island-css-scene .tree:nth-child(n + 9):nth-child(-n + 12) { top: 44px; }
+
+.island-css-scene .supply:nth-child(1) { left: 0; }
+.island-css-scene .supply:nth-child(2) { left: 13px; }
+.island-css-scene .supply:nth-child(3) { left: 26px; }
+.island-css-scene .supply:nth-child(4) { left: 39px; }
+.island-css-scene .supply:nth-child(5) { left: 52px; }
+.island-css-scene .supply:nth-child(odd) { top: 0; }
+.island-css-scene .supply:nth-child(even) { top: 9px; }
+
+.island-css-scene .danger-zones .danger-zone:nth-child(3n + 1) { left: 0; }
+.island-css-scene .danger-zones .danger-zone:nth-child(3n + 2) { left: 19px; }
+.island-css-scene .danger-zones .danger-zone:nth-child(3n + 3) { left: 38px; }
+.island-css-scene .danger-zones .danger-zone:nth-child(n + 1):nth-child(-n + 3) { top: 0; }
+.island-css-scene .danger-zones .danger-zone:nth-child(n + 4):nth-child(-n + 5) { top: 20px; }

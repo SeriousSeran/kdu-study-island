@@ -152,6 +152,17 @@ Publish directory:
 dist
 ```
 
+Cloudflare Pages settings:
+
+```text
+Framework preset: Vite
+Build command: npm run build
+Build output directory: dist
+Node.js version: 22.12.0
+```
+
+The repo includes both `.nvmrc` and `.node-version` so Cloudflare Pages does not fall back to an older Node runtime that cannot run the current Vite toolchain.
+
 Required environment variables:
 
 ```text
