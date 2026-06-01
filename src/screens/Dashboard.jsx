@@ -2,14 +2,16 @@ import React from "react";
 import { summarizeInventory } from "../data/banks.js";
 import { dueItems } from "../practice/srs.js";
 import IslandHero from "../components/IslandHero.jsx";
+import { getDailyProgress, todayKey } from "../storage/dailyProgress.js";
 
 export default function Dashboard({ papers, caseBank, profile, attempts, settings, onPractice, onTab, weakConcepts = {}, focus = {} }) {
   const inv = summarizeInventory(papers, caseBank);
   const due = dueItems(attempts).length;
   const days = Math.max(0, Math.ceil((new Date(settings.examDate || "2026-06-14") - new Date()) / 86400000));
-  const todayDone = profile.mcqDone || 0;
+  const todayProgress = getDailyProgress(profile, todayKey());
+  const todayDone = todayProgress.mcqDone;
   const mcqPercent = Math.min(100, (todayDone / 20) * 100);
-  const seqComplete = (profile.seqDone || 0) >= 1;
+  const seqComplete = todayProgress.seqDone >= 1;
   const weakCount = Object.keys(weakConcepts || {}).length;
   const completedFocusSessions = Object.values(focus?.sessions || {}).filter(s => s.status === "completed").length;
   const safeDay = todayDone >= 20 && seqComplete && weakCount === 0;

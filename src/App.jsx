@@ -5,6 +5,7 @@ import { buildKnowledgeGraph } from "./graph/knowledgeGraph.js";
 import { backupFileName, buildPortableBackup, parsePortableBackup } from "./storage/backup.js";
 import { buildSaveBlob, hashKey, mergeBlob } from "./storage/sync.js";
 import { DEFAULT_PROFILE, DEFAULT_SETTINGS, loadSaveState, saveKey } from "./storage/saveStore.js";
+import { incrementDailyProgress } from "./storage/dailyProgress.js";
 import { dueItems } from "./practice/srs.js";
 import Dashboard from "./screens/Dashboard.jsx";
 import Papers from "./screens/Papers.jsx";
@@ -184,7 +185,7 @@ export default function App() {
         srs,
       },
     }));
-    setProfile(prev => ({ ...prev, total: (prev.total || 0) + 1, mcqDone: (prev.mcqDone || 0) + 1, xp: (prev.xp || 0) + (result.correct ? 12 : 4) }));
+    setProfile(prev => incrementDailyProgress({ ...prev, total: (prev.total || 0) + 1, mcqDone: (prev.mcqDone || 0) + 1, xp: (prev.xp || 0) + (result.correct ? 12 : 4) }, "mcqDone"));
     setLog(prev => [...prev, { id: question.id, kind: "MCQ", subject: paper.subject, correct: result.correct, percent: result.percent, at: now }].slice(-2000));
   };
 
@@ -209,7 +210,7 @@ export default function App() {
         srs,
       },
     }));
-    setProfile(prev => ({ ...prev, seqDone: (prev.seqDone || 0) + 1, xp: (prev.xp || 0) + 8 }));
+    setProfile(prev => incrementDailyProgress({ ...prev, seqDone: (prev.seqDone || 0) + 1, xp: (prev.xp || 0) + 8 }, "seqDone"));
   };
 
   const doSync = async () => {

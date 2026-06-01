@@ -22,6 +22,21 @@ function newerMerge(a = {}, b = {}, tsKey) {
   return out;
 }
 
+function mergeDailyProgress(a = {}, b = {}) {
+  const maxN = (x, y) => Math.max(Number(x) || 0, Number(y) || 0);
+  const out = { ...(a || {}) };
+  for (const [dateKey, bucket] of Object.entries(b || {})) {
+    const cur = out[dateKey] || {};
+    out[dateKey] = {
+      ...cur,
+      ...bucket,
+      mcqDone: maxN(cur.mcqDone, bucket?.mcqDone),
+      seqDone: maxN(cur.seqDone, bucket?.seqDone),
+    };
+  }
+  return out;
+}
+
 function mergeProfiles(a = {}, b = {}) {
   const maxN = (x, y) => Math.max(Number(x) || 0, Number(y) || 0);
   return {
@@ -35,6 +50,7 @@ function mergeProfiles(a = {}, b = {}) {
     streak: maxN(a.streak, b.streak),
     lastDay: [a.lastDay, b.lastDay].filter(Boolean).sort().pop() || null,
     badges: Array.from(new Set([...(a.badges || []), ...(b.badges || [])])),
+    dailyProgress: mergeDailyProgress(a.dailyProgress, b.dailyProgress),
   };
 }
 
