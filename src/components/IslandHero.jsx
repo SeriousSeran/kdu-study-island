@@ -1,56 +1,51 @@
-import React, { useEffect, useRef } from "react";
-import { createIslandScene } from "../game/islandScene.js";
+import React from "react";
+
+const clampNumber = (value, min, max) => Math.max(min, Math.min(max, Number(value) || 0));
 
 export default function IslandHero({ days = 0, mcqProgress = 0, seqComplete = false, weakCount = 0, focusTrees = 0 }) {
-  const canvasRef = useRef(null);
-  const mcqLabel = `${Math.round(mcqProgress)}% MCQ supplies`;
+  const progress = clampNumber(mcqProgress, 0, 100);
+  const dangerZones = Math.round(clampNumber(weakCount, 0, 5));
+  const visibleTrees = Math.max(3, Math.round(clampNumber(focusTrees, 0, 12)));
+  const supplyFruit = Math.max(1, Math.ceil(progress / 20));
+  const mcqLabel = `${Math.round(progress)}% MCQ supplies`;
   const seqLabel = seqComplete ? "clinic fire lit" : "clinic fire waiting";
-  const weakLabel = weakCount ? `${weakCount} danger zones active` : "danger zones clear";
+  const weakLabel = dangerZones ? `${dangerZones} danger zones active` : "danger zones clear";
   const forestLabel = `${focusTrees} Study Forest trees grown`;
 
-  useEffect(() => {
-    let disposed = false;
-    let kaplayContext;
-    let cleanupScene;
-    const canvas = canvasRef.current;
-
-    if (!canvas) return undefined;
-
-    canvas.width = 320;
-    canvas.height = 220;
-
-    import("kaplay").then(({ default: kaplay }) => {
-      if (disposed) return;
-
-      kaplayContext = kaplay({
-        width: 320,
-        height: 220,
-        canvas,
-        global: false,
-        background: [18, 103, 169],
-        crisp: true,
-        debug: false,
-      });
-
-      cleanupScene = createIslandScene(kaplayContext, {
-        days,
-        mcqProgress,
-        seqComplete,
-        weakCount,
-        focusTrees,
-      });
-    });
-
-    return () => {
-      disposed = true;
-      cleanupScene?.();
-      kaplayContext?.quit?.();
-    };
-  }, [days, mcqProgress, seqComplete, weakCount, focusTrees]);
+  const trees = Array.from({ length: visibleTrees }, (_, index) => index);
+  const supplies = Array.from({ length: supplyFruit }, (_, index) => index);
+  const dangers = Array.from({ length: dangerZones }, (_, index) => index);
 
   return (
     <figure className="island-hero-canvas-wrap" aria-label="KDU Finals Island dashboard scene">
-      <canvas ref={canvasRef} className="island-hero-canvas" aria-hidden="true" />
+      <div
+        className="island-css-scene"
+        aria-hidden="true"
+        style={{ "--forest-trees": visibleTrees, "--mcq-progress": `${progress}%` }}
+      >
+        <span className={days <= 14 ? "sun urgent" : "sun"} />
+        <span className="wave wave-one" />
+        <span className="wave wave-two" />
+        <span className="island" />
+        <span className="clinic">
+          <span className={seqComplete ? "campfire lit" : "campfire"} />
+        </span>
+        <span className="forest">
+          {trees.map(index => (
+            <span className="tree" key={index} style={{ "--tree-index": index }} />
+          ))}
+        </span>
+        <span className="supplies">
+          {supplies.map(index => (
+            <span className="supply" key={index} style={{ "--supply-index": index }} />
+          ))}
+        </span>
+        <span className="danger-zones">
+          {dangers.map(index => (
+            <span className="danger-zone" key={index} style={{ "--danger-index": index }} />
+          ))}
+        </span>
+      </div>
       <figcaption className="sr-only">
         Decorative island status: final boss in {days} days, {mcqLabel}, {seqLabel}, {weakLabel}, and {forestLabel}.
       </figcaption>

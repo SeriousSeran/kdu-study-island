@@ -18,9 +18,12 @@
     "@vitejs/plugin-react": "^6.0.2",
     "fuse.js": "^7.4.0",
     "idb-keyval": "^6.2.4",
-    "kaplay": "latest",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "vite": "^8.0.14"
-  }
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "packageManager": "npm@11.4.2"
 }
