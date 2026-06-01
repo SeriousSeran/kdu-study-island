@@ -1,6 +1,7 @@
 import React from "react";
 import { summarizeInventory } from "../data/banks.js";
 import { dueItems } from "../practice/srs.js";
+import { activeWeakConceptCount } from "../practice/reviewEngine.js";
 import IslandHero from "../components/IslandHero.jsx";
 
 export default function Dashboard({ papers, caseBank, profile, attempts, settings, onPractice, onTab, weakConcepts = {}, focus = {} }) {
@@ -10,7 +11,7 @@ export default function Dashboard({ papers, caseBank, profile, attempts, setting
   const todayDone = profile.mcqDone || 0;
   const mcqPercent = Math.min(100, (todayDone / 20) * 100);
   const seqComplete = (profile.seqDone || 0) >= 1;
-  const weakCount = Object.keys(weakConcepts || {}).length;
+  const weakCount = activeWeakConceptCount(weakConcepts, attempts);
   const completedFocusSessions = Object.values(focus?.sessions || {}).filter(s => s.status === "completed").length;
   const safeDay = todayDone >= 20 && seqComplete && weakCount === 0;
 

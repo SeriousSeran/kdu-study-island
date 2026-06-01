@@ -26,6 +26,10 @@ import { applyGraphUpdates, EDGE_TYPES, NODE_TYPES, nodeId } from "../graph/d3Mo
  * @property {string[]} linkedTopics
  * @property {Object[]} graphUpdates  Ready for applyGraphUpdates().
  * @property {Object} srs          Updated SRS state.
+ * @property {"active"|"due"|"cleared"} status
+ * @property {number} due
+ * @property {number|null} lastReviewedAt
+ * @property {number|null} clearedAt
  * @property {number} createdAt
  */
 
@@ -145,9 +149,71 @@ export function processCaseResult(casePack, feedback, aiJson = null, d3Graph = {
 
 // ─── Internal helpers ────────────────────────────────────────────────────────
 
-function _makeWeakConcept({ id, kind, subject, stem, weakReason, recallQ, linkedTopics, graphUpdates, srs }) {
+export function normalizeWeakConcept(record, attempt = null, now = Date.now()) {
+  if (!record) return null;
+  const id = record.id || record.sourceItemId || attempt?.id;
+  if (!id) return null;
+  const status = record.status || (record.clearedAt ? "cleared" : "active");
+  const srs = record.srs || attempt?.srs || null;
   return {
+    ...record,
     id,
+    sourceItemId: record.sourceItemId || id,
+    kind: record.kind || attempt?.kind || "MCQ",
+    subject: record.subject || attempt?.subject || "General",
+    stem: record.stem || attempt?.stem || record.recallQuestion || record.weakness || "Weak concept",
+    weakReason: record.weakReason || record.mistakePattern || record.weakness || "Needs targeted review.",
+    recallQ: record.recallQ || record.recallQuestion || "Explain this concept safely under exam pressure.",
+    linkedTopics: Array.isArray(record.linkedTopics) ? record.linkedTopics : [],
+    graphUpdates: Array.isArray(record.graphUpdates) ? record.graphUpdates : [],
+    srs,
+    status,
+    due: Number(record.due || srs?.due || now),
+    lastReviewedAt: record.lastReviewedAt || null,
+    clearedAt: record.clearedAt || null,
+    createdAt: record.createdAt || now,
+    updatedAt: record.updatedAt || record.createdAt || now,
+    count: record.count || 1,
+  };
+}
+
+export function isWeakConceptCleared(record) {
+  return normalizeWeakConcept(record)?.status === "cleared";
+}
+
+export function isWeakConceptReviewable(record, now = Date.now()) {
+  const weakConcept = normalizeWeakConcept(record, null, now);
+  return !!weakConcept && weakConcept.status !== "cleared";
+}
+
+export function dueWeakConcepts(weakConcepts = {}, attempts = {}, now = Date.now()) {
+  return Object.values(weakConcepts || {})
+    .map(record => normalizeWeakConcept(record, attempts?.[record.sourceItemId || record.id], now))
+    .filter(item => item && item.status !== "cleared")
+    .sort((a, b) => (a.due || now) - (b.due || now));
+}
+
+export function activeWeakConceptCount(weakConcepts = {}, attempts = {}, now = Date.now()) {
+  return dueWeakConcepts(weakConcepts, attempts, now).length;
+}
+
+export function clearWeakConceptRecord(record, now = Date.now()) {
+  const weakConcept = normalizeWeakConcept(record, null, now);
+  if (!weakConcept) return null;
+  return {
+    ...weakConcept,
+    status: "cleared",
+    lastReviewedAt: now,
+    clearedAt: now,
+    updatedAt: now,
+  };
+}
+
+function _makeWeakConcept({ id, kind, subject, stem, weakReason, recallQ, linkedTopics, graphUpdates, srs }) {
+  const now = Date.now();
+  return normalizeWeakConcept({
+    id,
+    sourceItemId: id,
     kind,
     subject,
     stem,
@@ -156,8 +222,13 @@ function _makeWeakConcept({ id, kind, subject, stem, weakReason, recallQ, linked
     linkedTopics,
     graphUpdates,
     srs,
-    createdAt: Date.now(),
-  };
+    status: "active",
+    due: srs?.due || now,
+    lastReviewedAt: null,
+    clearedAt: null,
+    createdAt: now,
+    updatedAt: now,
+  }, null, now);
 }
 
 function _heuristicMcqReason(result) {
