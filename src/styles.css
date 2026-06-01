@@ -226,13 +226,14 @@ textarea { resize: vertical; }
 .bottom-nav {
   position: fixed;
   left: 50%;
-  bottom: 10px;
+  bottom: calc(10px + env(safe-area-inset-bottom));
   transform: translateX(-50%);
   width: min(calc(100% - 20px), 448px);
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   gap: 2px;
   padding: 8px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom));
   border: 1px solid var(--line);
   border-radius: 28px;
   background: rgba(255, 255, 255, .92);
@@ -244,15 +245,40 @@ textarea { resize: vertical; }
   border-radius: 18px;
   background: transparent;
   color: var(--muted);
-  min-height: 44px;
-  font-size: 11px;
+  min-width: 0;
+  min-height: 48px;
+  padding: 4px 2px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  font-size: 10px;
   font-weight: 900;
+  line-height: 1;
 }
 .bottom-nav button.active { background: #dbeafe; color: var(--primary); }
+.bottom-nav-icon {
+  width: 19px;
+  height: 19px;
+  color: currentColor;
+}
+.bottom-nav-label {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 @media (max-width: 380px) {
   .app { padding-left: 10px; padding-right: 10px; }
   .bottom-nav { grid-template-columns: repeat(4, 1fr); }
+  .bottom-nav button { min-height: 46px; }
+}
+
+@media (max-width: 340px) {
+  .bottom-nav-icon { width: 18px; height: 18px; }
+  .bottom-nav button { font-size: 9px; }
 }
 
 /* ───────── Fluid polish layer ───────── */
@@ -344,7 +370,7 @@ button.sm { padding: 7px 12px; border-radius: 14px; font-size: 13px; }
 .seg button:active::after, .choices button:active::after { opacity: var(--state-press); }
 
 /* M3 navigation bar: pill indicator behind the active destination */
-.bottom-nav button { display: grid; place-items: center; gap: 2px; transition: color .2s ease; }
+.bottom-nav button { display: grid; place-items: center; align-content: center; gap: 2px; transition: color .2s ease; }
 .bottom-nav button::before {
   content: "";
   position: absolute;

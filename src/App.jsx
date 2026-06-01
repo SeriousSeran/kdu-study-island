@@ -15,19 +15,20 @@ import Review from "./screens/Review.jsx";
 import Settings from "./screens/Settings.jsx";
 import TopicAtlas from "./screens/TopicAtlas.jsx";
 import FocusClinic from "./screens/FocusClinic.jsx";
+import { IslandNavIcon } from "./components/IslandNavIcons.jsx";
 
 // The graph renderer is visually rich — only load it when its tab is opened.
 const Graph = React.lazy(() => import("./screens/Graph.jsx"));
 
 const TABS = [
-  ["home", "Today"],
-  ["papers", "Papers"],
-  ["cases", "Cases"],
-  ["atlas", "Atlas"],
-  ["focus", "Forest"],
-  ["graph", "Graph"],
-  ["review", "Review"],
-  ["settings", "Sync"],
+  { id: "home", label: "Today", icon: "sunrise" },
+  { id: "papers", label: "Papers", icon: "papers" },
+  { id: "cases", label: "Cases", icon: "cases" },
+  { id: "atlas", label: "Atlas", icon: "atlas" },
+  { id: "focus", label: "Forest", icon: "forest" },
+  { id: "graph", label: "Graph", icon: "graph" },
+  { id: "review", label: "Review", icon: "review" },
+  { id: "settings", label: "Sync", icon: "sync" },
 ];
 
 function firstMcqPaper(papers) {
@@ -297,7 +298,12 @@ export default function App() {
         </React.Suspense>
       </ErrorBoundary>
       <nav className="bottom-nav">
-        {TABS.map(([id, label]) => <button key={id} className={tab === id ? "active" : ""} onClick={() => setTab(id)}>{label}</button>)}
+        {TABS.map(({ id, label, icon }) => (
+          <button key={id} className={tab === id ? "active" : ""} onClick={() => setTab(id)} aria-label={label}>
+            <IslandNavIcon name={icon} />
+            <span className="bottom-nav-label">{label}</span>
+          </button>
+        ))}
       </nav>
     </main>
   );
