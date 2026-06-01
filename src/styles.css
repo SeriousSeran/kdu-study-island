@@ -1004,3 +1004,147 @@ select:focus, input:focus, textarea:focus, .search:focus {
 }
 
 
+
+/* KDU Finals Island dashboard hero */
+.island-top-card {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: 18px;
+  padding: 20px;
+  border: 1px solid rgba(15, 118, 110, 0.18);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 82% 10%, rgba(254, 226, 154, 0.52), transparent 28%),
+    linear-gradient(145deg, #0f766e 0%, #1268a6 52%, #1d4ed8 100%);
+  box-shadow: 0 20px 46px rgba(14, 116, 144, 0.24);
+  color: #fff;
+}
+
+.island-top-card::before {
+  content: "";
+  position: absolute;
+  inset: auto -54px -72px auto;
+  width: 190px;
+  height: 190px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+.island-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 10px;
+}
+
+.island-copy h1,
+.island-copy p {
+  margin: 0;
+}
+
+.island-copy h1 {
+  color: #fff;
+  font-size: clamp(26px, 8vw, 36px);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+}
+
+.island-copy p {
+  max-width: 36ch;
+  color: #d9f99d;
+  font-weight: 700;
+}
+
+.island-badge {
+  width: max-content;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff7ed;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.island-cta {
+  width: max-content;
+  margin-top: 2px;
+  background: #f97316;
+  box-shadow: 0 10px 22px rgba(124, 45, 18, 0.22);
+}
+
+.island-hero-canvas-wrap {
+  position: relative;
+  z-index: 1;
+  min-height: 210px;
+  margin: 0;
+  border: 2px solid rgba(255, 255, 255, 0.32);
+  border-radius: 26px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(14, 165, 233, 0.92), rgba(17, 94, 89, 0.98));
+  box-shadow: inset 0 -18px 44px rgba(12, 74, 110, 0.34);
+  isolation: isolate;
+}
+
+.island-hero-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 210px;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+.island-hero-fallback {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.island-hero-fallback span {
+  padding: 5px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 999px;
+  background: rgba(12, 74, 110, 0.58);
+  color: #ecfeff;
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+  backdrop-filter: blur(8px);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (min-width: 430px) {
+  .island-top-card {
+    grid-template-columns: 0.92fr 1.08fr;
+    align-items: center;
+  }
+
+  .island-hero-canvas-wrap {
+    min-height: 220px;
+  }
+
+  .island-hero-canvas {
+    min-height: 220px;
+  }
+}
