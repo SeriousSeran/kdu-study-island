@@ -1,0 +1,14 @@
+name = "soft-sea-d7c0"
+main = "worker.js"
+compatibility_date = "2026-06-01"
+
+[ai]
+binding = "AI"
+
+# To deploy:
+#   1. Install wrangler: npm install -g wrangler
+#   2. Login: npx wrangler login
+#   3. Deploy: npx wrangler deploy
+#
+# No secrets needed for this Worker — Workers AI is billed to your Cloudflare account.
+# Make sure Workers AI is enabled in your Cloudflare dashboard.

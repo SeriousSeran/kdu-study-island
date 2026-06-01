@@ -1,0 +1,13 @@
+{
+  "name": "KDU Study",
+  "short_name": "KDU Study",
+  "description": "Clean mobile-first KDU finals trainer for MCQs, SEQs, cases, and review",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f9ff",
+  "theme_color": "#2563eb",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

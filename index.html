@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#f7f9ff" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <title>KDU Study</title>
+  <script>
+    // Throttled global auto-recovery handler for script/chunk load failures
+    window.addEventListener('error', function(e) {
+      const msg = e.message || '';
+      if (msg.indexOf('Unexpected token') !== -1 || msg.indexOf('chunk') !== -1 || msg.indexOf('Loading chunk') !== -1) {
+        if (window.location.search.indexOf('recovered=1') === -1) {
+          const separator = window.location.search ? '&' : '?';
+          const newUrl = window.location.pathname + window.location.search + separator + 'recovered=1' + window.location.hash;
+          console.warn("Script/chunk load error detected. Unregistering SW and reloading...");
+          if (navigator.serviceWorker) {
+            navigator.serviceWorker.getRegistrations().then(function(regs) {
+              for (var i = 0; i < regs.length; i++) regs[i].unregister();
+              window.location.replace(newUrl);
+            }).catch(function() {
+              window.location.replace(newUrl);
+            });
+          } else {
+            window.location.replace(newUrl);
+          }
+        }
+      }
+    }, true);
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="/questions.js"></script>
+  <script src="/seqBank.js"></script>
+  <script src="/ocrMcqBank.js"></script>
+  <script src="/caseBank.js"></script>
+  <script src="/ragIndex.js"></script>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>
