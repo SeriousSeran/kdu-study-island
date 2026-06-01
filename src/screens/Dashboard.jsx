@@ -2,6 +2,7 @@ import React from "react";
 import { summarizeInventory } from "../data/banks.js";
 import { dueItems } from "../practice/srs.js";
 import IslandHero from "../components/IslandHero.jsx";
+import IslandIcon from "../assets/island/IslandIcon.jsx";
 
 export default function Dashboard({ papers, caseBank, profile, attempts, settings, onPractice, onTab, weakConcepts = {}, focus = {} }) {
   const inv = summarizeInventory(papers, caseBank);
@@ -32,7 +33,7 @@ export default function Dashboard({ papers, caseBank, profile, attempts, setting
             <p className="eyebrow">TODAY'S SURVIVAL TASKS</p>
             <h3>{safeDay ? "Safe Day badge secured" : "Minimum pass ritual"}</h3>
           </div>
-          <span className="safe-day-badge">{safeDay ? "🏝️ Safe Day" : "⚕️ On duty"}</span>
+          <span className="safe-day-badge"><IslandIcon id={safeDay ? "campfire" : "clinicCase"} />{safeDay ? "Safe Day" : "On duty"}</span>
         </div>
 
         <SurvivalTask
@@ -59,14 +60,15 @@ export default function Dashboard({ papers, caseBank, profile, attempts, setting
       </section>
 
       <section className="island-building-grid">
-        <BuildingCard icon="🥥" title="MCQ Supplies" value={inv.mcq} label="scored questions" onClick={() => onTab("papers")} />
-        <BuildingCard icon="📜" title="SEQ Hut" value={inv.seq} label="written papers" onClick={() => onTab("papers")} />
-        <BuildingCard icon="🩺" title="Clinic Cases" value={inv.cases} label="live OSCE sheets" onClick={() => onTab("cases")} />
-        <BuildingCard icon="🟣" title="SRS Enemies" value={due} label="due reviews" onClick={() => onTab("review")} />
+        <BuildingCard iconId="mcqSupplies" title="MCQ Supplies" value={inv.mcq} label="scored questions" onClick={() => onTab("papers")} />
+        <BuildingCard iconId="seqScroll" title="SEQ Hut" value={inv.seq} label="written papers" onClick={() => onTab("papers")} />
+        <BuildingCard iconId="clinicCase" title="Clinic Cases" value={inv.cases} label="live OSCE sheets" onClick={() => onTab("cases")} />
+        <BuildingCard iconId="srsHourglass" title="SRS Enemies" value={due} label="due reviews" onClick={() => onTab("review")} />
       </section>
 
       <section className="card forest-card clickable" onClick={() => onTab("focus")}>
         <div>
+          <span className="feature-icon"><IslandIcon id="studyTree" /></span>
           <p className="eyebrow">STUDY FOREST</p>
           <h3>{completedFocusSessions || 0} focus trees grown</h3>
           <p className="subtitle">Plant focus blocks. Each completed session makes the island feel more alive.</p>
@@ -75,6 +77,7 @@ export default function Dashboard({ papers, caseBank, profile, attempts, setting
       </section>
 
       <section className="card atlas-card clickable" onClick={() => onTab("atlas")}>
+        <span className="feature-icon"><IslandIcon id="atlasMap" /></span>
         <p className="eyebrow">CLINICAL TOPIC ATLAS</p>
         <h3>Open the island map</h3>
         <p className="subtitle">Move through Medicine finals topics by systems, weak mechanisms, and exam patterns.</p>
@@ -82,6 +85,7 @@ export default function Dashboard({ papers, caseBank, profile, attempts, setting
 
       {weakCount > 0 && (
         <section className="card warning-card clickable" onClick={() => onTab("review")}>
+          <span className="feature-icon danger"><IslandIcon id="dangerMarker" /></span>
           <h3>Danger zone active</h3>
           <p><b>{weakCount}</b> weak concepts are still roaming the island. Clear them before the final boss exam.</p>
         </section>
@@ -91,19 +95,21 @@ export default function Dashboard({ papers, caseBank, profile, attempts, setting
 }
 
 function SurvivalTask({ label, value, progress, theme, onClick }) {
+  const iconByTheme = { supplies: "mcqSupplies", clinic: "clinicCase", danger: "dangerMarker" };
+
   return (
     <button className={`survival-task ${theme}`} onClick={onClick}>
-      <span>{label}</span>
+      <span className="survival-task-label"><IslandIcon id={iconByTheme[theme]} />{label}</span>
       <b>{value}</b>
       <i><em style={{ width: `${Math.min(100, progress)}%` }} /></i>
     </button>
   );
 }
 
-function BuildingCard({ icon, title, value, label, onClick }) {
+function BuildingCard({ iconId, title, value, label, onClick }) {
   return (
     <button className="building-card" onClick={onClick}>
-      <span className="building-icon">{icon}</span>
+      <span className="building-icon"><IslandIcon id={iconId} /></span>
       <b>{value}</b>
       <strong>{title}</strong>
       <small>{label}</small>

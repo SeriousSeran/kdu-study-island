@@ -726,3 +726,405 @@ button.sm,
     margin: -1px;
   }
 }
+
+/* ───────── Phase 1 original island asset layer ───────── */
+.island-icon {
+  width: 1.7em;
+  height: 1.7em;
+  display: inline-block;
+  flex: 0 0 auto;
+  vertical-align: middle;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 2px 0 rgba(91, 63, 31, .10));
+}
+
+.island-dashboard {
+  gap: 14px;
+}
+
+.island-top-card {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(128px, .9fr);
+  gap: 12px;
+  align-items: center;
+  padding: 18px;
+  border: 1px solid rgba(34, 197, 160, .28);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 88% 8%, rgba(255, 214, 102, .42) 0 13%, transparent 14%),
+    linear-gradient(145deg, rgba(224, 251, 246, .96), rgba(219, 234, 254, .96) 48%, rgba(255, 242, 203, .93));
+  box-shadow: 0 18px 46px rgba(15, 118, 110, .16);
+}
+
+.island-top-card::after {
+  content: "";
+  position: absolute;
+  inset-inline: -18px;
+  bottom: -28px;
+  height: 74px;
+  background: radial-gradient(ellipse at center, rgba(20, 184, 166, .20), transparent 62%);
+  pointer-events: none;
+}
+
+.island-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 9px;
+}
+
+.island-badge,
+.safe-day-badge {
+  width: max-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 118, 110, .18);
+  background: rgba(255, 255, 255, .72);
+  color: #0f766e;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.safe-day-badge {
+  color: #8a3b12;
+  background: #fff7db;
+  border-color: #fed7aa;
+}
+
+.safe-day-badge .island-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.island-copy h1 {
+  margin: 0;
+  font-size: clamp(28px, 8vw, 40px);
+  line-height: .96;
+  letter-spacing: -.04em;
+  color: #12325f;
+}
+
+.island-copy p {
+  margin: 0;
+  color: #31546b;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.island-cta {
+  margin-top: 2px;
+  box-shadow: 0 10px 22px rgba(37, 99, 235, .24);
+}
+
+.island-hero-canvas-wrap {
+  position: relative;
+  z-index: 1;
+  min-height: 174px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, #7dd3fc 0%, #2dd4bf 62%, #38bdf8 100%);
+  border: 1px solid rgba(255, 255, 255, .58);
+  box-shadow: inset 0 -18px 34px rgba(3, 105, 161, .16);
+  overflow: hidden;
+}
+
+.island-css-scene {
+  position: absolute;
+  inset: 0;
+}
+
+.island-css-scene span {
+  position: absolute;
+  display: block;
+}
+
+.island-css-scene .sun {
+  top: 18px;
+  right: 18px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #fde68a;
+  box-shadow: 0 0 0 8px rgba(253, 230, 138, .32);
+}
+
+.island-css-scene .island {
+  left: 16%;
+  right: 10%;
+  bottom: 22px;
+  height: 52px;
+  border-radius: 50% 50% 38% 38%;
+  background: linear-gradient(180deg, #facc6b 0 48%, #c9853b 49% 100%);
+  box-shadow: 0 12px 0 rgba(12, 74, 110, .12);
+}
+
+.island-css-scene .forest {
+  left: 22%;
+  bottom: 62px;
+  width: 70px;
+  height: 54px;
+  background:
+    radial-gradient(circle at 22px 31px, #22c55e 0 17px, transparent 18px),
+    radial-gradient(circle at 42px 22px, #15803d 0 20px, transparent 21px),
+    radial-gradient(circle at 54px 37px, #4ade80 0 16px, transparent 17px),
+    linear-gradient(90deg, transparent 45%, #8b5a2b 46% 56%, transparent 57%);
+}
+
+.island-css-scene .clinic {
+  right: 22%;
+  bottom: 60px;
+  width: 54px;
+  height: 44px;
+  border-radius: 10px 10px 5px 5px;
+  background: linear-gradient(180deg, #d97706 0 18px, #f5deb3 19px 100%);
+  box-shadow: inset 0 -8px 0 rgba(120, 53, 15, .14);
+}
+
+.island-css-scene .clinic::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  top: -10px;
+  height: 18px;
+  border-radius: 7px 7px 2px 2px;
+  background: #92400e;
+}
+
+.island-css-scene .clinic::after {
+  content: "+";
+  position: absolute;
+  inset: 17px 0 auto;
+  color: #dc2626;
+  text-align: center;
+  font-weight: 950;
+  font-size: 18px;
+}
+
+.island-css-scene .danger-zone {
+  right: 10%;
+  bottom: 84px;
+  width: 18px;
+  height: 18px;
+  transform: rotate(45deg);
+  background: #ef4444;
+  border: 3px solid #fee2e2;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, .16);
+}
+
+.survival-card {
+  display: grid;
+  gap: 12px;
+  background: linear-gradient(180deg, #fff7ed, #fffaf0);
+  border-color: #fed7aa;
+}
+
+.survival-card.safe {
+  background: linear-gradient(180deg, #ecfdf5, #f0fdf4);
+  border-color: #bbf7d0;
+}
+
+.survival-task {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 12px;
+  width: 100%;
+  min-height: 58px;
+  padding: 12px;
+  border: 1.5px solid #ead7b8;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, .76);
+  color: var(--ink);
+  text-align: left;
+  box-shadow: 0 8px 18px rgba(120, 53, 15, .06);
+}
+
+.survival-task-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-weight: 950;
+}
+
+.survival-task-label .island-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.survival-task b {
+  font-size: 13px;
+  color: #0f766e;
+}
+
+.survival-task i {
+  grid-column: 1 / -1;
+  height: 9px;
+  border-radius: 999px;
+  background: #f1e3ca;
+  overflow: hidden;
+}
+
+.survival-task i em {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2dd4bf, #22c55e);
+}
+
+.survival-task.danger i em {
+  background: linear-gradient(90deg, #fb7185, #f97316);
+}
+
+.island-building-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.building-card {
+  display: grid;
+  justify-items: start;
+  gap: 5px;
+  min-height: 154px;
+  padding: 14px;
+  border: 1.5px solid #dfcda9;
+  border-radius: 26px;
+  background: linear-gradient(180deg, #fff8e8, #f4e5c4);
+  color: #213547;
+  text-align: left;
+  box-shadow: 0 12px 24px rgba(91, 63, 31, .08);
+}
+
+.building-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .68);
+  border: 1px solid rgba(120, 53, 15, .12);
+}
+
+.building-icon .island-icon {
+  width: 38px;
+  height: 38px;
+}
+
+.building-card b {
+  margin-top: auto;
+  font-size: 26px;
+  line-height: 1;
+  color: #0f766e;
+}
+
+.building-card strong {
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.building-card small {
+  color: #6b5b43;
+  font-weight: 800;
+}
+
+.feature-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 8px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .68);
+  border: 1px solid rgba(15, 118, 110, .14);
+}
+
+.feature-icon .island-icon {
+  width: 38px;
+  height: 38px;
+}
+
+.feature-icon.danger {
+  background: #fff1f2;
+  border-color: #fecdd3;
+}
+
+.forest-card,
+.atlas-card,
+.warning-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.forest-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #ecfdf5, #f7fee7);
+  border-color: #bbf7d0;
+}
+
+.atlas-card {
+  background: linear-gradient(135deg, #fff7ed, #e0f2fe);
+  border-color: #fed7aa;
+}
+
+.warning-card {
+  background: linear-gradient(135deg, #fff1f2, #fffbeb);
+  border-color: #fecdd3;
+}
+
+.arrow-indicator {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534;
+  font-weight: 950;
+}
+
+.bottom-nav button {
+  grid-template-rows: 28px 14px;
+  align-content: center;
+  justify-items: center;
+  gap: 1px;
+  line-height: 1;
+}
+
+.bottom-nav button .island-icon {
+  width: 25px;
+  height: 25px;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 1px 0 rgba(15, 23, 42, .08));
+}
+
+.bottom-nav button span {
+  position: relative;
+  z-index: 1;
+}
+
+.bottom-nav button::before {
+  top: 4px;
+  height: 30px;
+}
+
+@media (max-width: 430px) {
+  .island-top-card {
+    grid-template-columns: 1fr;
+  }
+
+  .island-hero-canvas-wrap {
+    min-height: 150px;
+  }
+}
