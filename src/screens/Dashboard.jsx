@@ -1,123 +1,112 @@
 import React from "react";
 import { summarizeInventory } from "../data/banks.js";
 import { dueItems } from "../practice/srs.js";
+import IslandHero from "../components/IslandHero.jsx";
 
 export default function Dashboard({ papers, caseBank, profile, attempts, settings, onPractice, onTab, weakConcepts = {}, focus = {} }) {
   const inv = summarizeInventory(papers, caseBank);
   const due = dueItems(attempts).length;
   const days = Math.max(0, Math.ceil((new Date(settings.examDate || "2026-06-14") - new Date()) / 86400000));
   const todayDone = profile.mcqDone || 0;
-  const goal = Number(settings.dailyGoal) || 60;
-  
-  // Calculate weak concept review counts
+  const mcqPercent = Math.min(100, (todayDone / 20) * 100);
+  const seqComplete = (profile.seqDone || 0) >= 1;
   const weakCount = Object.keys(weakConcepts || {}).length;
-
-  // Calculate completed focus blocks
   const completedFocusSessions = Object.values(focus?.sessions || {}).filter(s => s.status === "completed").length;
+  const safeDay = todayDone >= 20 && seqComplete && weakCount === 0;
 
   return (
-    <main className="screen scrollable">
-      {/* 1. MD3 Hero Card with exam countdown */}
-      <section className="dashboard-hero">
-        <div className="hero-content">
-          <span className="hero-countdown-badge">{days} days remaining</span>
-          <h1>KDU Finals Study Hub</h1>
-          <p className="hero-subtitle">Optimize every second. Focus on weak concepts, achieve maximum marks.</p>
+    <main className="screen scrollable island-dashboard">
+      <section className="island-top-card">
+        <div className="island-copy">
+          <span className="island-badge">Final boss in {days} days</span>
+          <h1>KDU Finals Island</h1>
+          <p>Survive today: collect MCQ supplies, run one clinic case, clear danger zones, and grow the Study Forest.</p>
+          <button className="primary pill island-cta" onClick={onPractice}>Continue Learning</button>
         </div>
-        <div className="hero-actions">
-          <button className="primary pill" onClick={onPractice}>
-            ⚡ Continue Learning
-          </button>
-        </div>
+        <IslandHero days={days} mcqProgress={mcqPercent} seqComplete={seqComplete} weakCount={weakCount} focusTrees={completedFocusSessions} />
       </section>
 
-      {/* 2. Today's Minimum Pass Set tracker */}
-      <section className="card pass-set-card">
-        <h3>Today's Minimum Pass Set</h3>
-        <p className="pass-set-subtitle">Achieve this daily ritual to secure your clinical pass.</p>
-        
-        <div className="pass-set-item">
-          <div className="row between">
-            <span className="pass-label">✓ 20 Daily MCQs</span>
-            <span className="pass-progress">{todayDone} / 20</span>
-          </div>
-          <div className="meter thin">
-            <span style={{ width: `${Math.min(100, (todayDone / 20) * 100)}%` }} className={todayDone >= 20 ? "completed" : ""} />
-          </div>
-        </div>
-
-        <div className="pass-set-item margin-top-sm">
-          <div className="row between">
-            <span className="pass-label">✓ 1 Clinical SEQ or Case</span>
-            <span className="pass-progress">{(profile.seqDone || 0) >= 1 ? "1 / 1" : "0 / 1"}</span>
-          </div>
-          <div className="meter thin">
-            <span style={{ width: `${(profile.seqDone || 0) >= 1 ? 100 : 0}%` }} className={(profile.seqDone || 0) >= 1 ? "completed" : ""} />
-          </div>
-        </div>
-
-        <div className="pass-set-item margin-top-sm">
-          <div className="row between">
-            <span className="pass-label">✓ Weak Review Clearance</span>
-            <span className="pass-progress">{weakCount} weak concepts</span>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Focus Clinic Quick Start Card */}
-      <section className="card focus-quick-start clickable" onClick={() => onTab("focus")}>
+      <section className={`card survival-card ${safeDay ? "safe" : ""}`}>
         <div className="row between align-center">
           <div>
-            <h3>Study Forest</h3>
-            <p className="subtitle">Plant a tree, stay focused, and answer MCQs to grow its fruit.</p>
-            {completedFocusSessions > 0 && (
-              <span className="garden-status-pill">🌳 {completedFocusSessions} Trees Grown</span>
-            )}
+            <p className="eyebrow">TODAY'S SURVIVAL TASKS</p>
+            <h3>{safeDay ? "Safe Day badge secured" : "Minimum pass ritual"}</h3>
           </div>
-          <span className="arrow-indicator">→</span>
+          <span className="safe-day-badge">{safeDay ? "🏝️ Safe Day" : "⚕️ On duty"}</span>
         </div>
+
+        <SurvivalTask
+          label="20 Daily MCQs"
+          theme="supplies"
+          value={`${Math.min(todayDone, 20)} / 20`}
+          progress={mcqPercent}
+          onClick={() => onTab("papers")}
+        />
+        <SurvivalTask
+          label="1 Clinical SEQ or Case"
+          theme="clinic"
+          value={seqComplete ? "1 / 1" : "0 / 1"}
+          progress={seqComplete ? 100 : 0}
+          onClick={() => onTab("cases")}
+        />
+        <SurvivalTask
+          label="Weak Review Clearance"
+          theme="danger"
+          value={weakCount ? `${weakCount} zones` : "clear"}
+          progress={weakCount ? 30 : 100}
+          onClick={() => onTab("review")}
+        />
       </section>
 
-      {/* 4. MD3 Bento Grid cards */}
-      <section className="bento-grid">
-        <div className="bento-card med" onClick={() => onTab("papers")}>
-          <p className="eyebrow">PRACTICE BANK</p>
-          <h2>{inv.mcq}</h2>
-          <span>Scored MCQs</span>
-        </div>
-
-        <div className="bento-card surg" onClick={() => onTab("papers")}>
-          <p className="eyebrow">WRITTEN PREP</p>
-          <h2>{inv.seq}</h2>
-          <span>SEQ Question Papers</span>
-        </div>
-
-        <div className="bento-card obgyn" onClick={() => onTab("cases")}>
-          <p className="eyebrow">LIVE OSCE</p>
-          <h2>{inv.cases}</h2>
-          <span>Clinical Case Sheets</span>
-        </div>
-
-        <div className="bento-card psych" onClick={() => onTab("review")}>
-          <p className="eyebrow">SRS SCHEDULER</p>
-          <h2>{due}</h2>
-          <span>Due review questions</span>
-        </div>
-
-        <div className="bento-card cardio full-width clickable" onClick={() => onTab("atlas")}>
-          <p className="eyebrow">COLLECTION</p>
-          <h2>Clinical Topic Atlas</h2>
-          <p className="subtitle">Access must-know exam criteria, presentations, and core mechanisms.</p>
-        </div>
+      <section className="island-building-grid">
+        <BuildingCard icon="🥥" title="MCQ Supplies" value={inv.mcq} label="scored questions" onClick={() => onTab("papers")} />
+        <BuildingCard icon="📜" title="SEQ Hut" value={inv.seq} label="written papers" onClick={() => onTab("papers")} />
+        <BuildingCard icon="🩺" title="Clinic Cases" value={inv.cases} label="live OSCE sheets" onClick={() => onTab("cases")} />
+        <BuildingCard icon="🟣" title="SRS Enemies" value={due} label="due reviews" onClick={() => onTab("review")} />
       </section>
 
-      {/* 5. Weakest System Highlight if weak concepts exist */}
+      <section className="card forest-card clickable" onClick={() => onTab("focus")}>
+        <div>
+          <p className="eyebrow">STUDY FOREST</p>
+          <h3>{completedFocusSessions || 0} focus trees grown</h3>
+          <p className="subtitle">Plant focus blocks. Each completed session makes the island feel more alive.</p>
+        </div>
+        <span className="arrow-indicator">→</span>
+      </section>
+
+      <section className="card atlas-card clickable" onClick={() => onTab("atlas")}>
+        <p className="eyebrow">CLINICAL TOPIC ATLAS</p>
+        <h3>Open the island map</h3>
+        <p className="subtitle">Move through Medicine finals topics by systems, weak mechanisms, and exam patterns.</p>
+      </section>
+
       {weakCount > 0 && (
         <section className="card warning-card clickable" onClick={() => onTab("review")}>
-          <h3>⚠️ Weak Spot Clearance Required</h3>
-          <p>You have <b>{weakCount}</b> weak topics marked for SRS review. Clear these concepts to secure your marks.</p>
+          <h3>Danger zone active</h3>
+          <p><b>{weakCount}</b> weak concepts are still roaming the island. Clear them before the final boss exam.</p>
         </section>
       )}
     </main>
+  );
+}
+
+function SurvivalTask({ label, value, progress, theme, onClick }) {
+  return (
+    <button className={`survival-task ${theme}`} onClick={onClick}>
+      <span>{label}</span>
+      <b>{value}</b>
+      <i><em style={{ width: `${Math.min(100, progress)}%` }} /></i>
+    </button>
+  );
+}
+
+function BuildingCard({ icon, title, value, label, onClick }) {
+  return (
+    <button className="building-card" onClick={onClick}>
+      <span className="building-icon">{icon}</span>
+      <b>{value}</b>
+      <strong>{title}</strong>
+      <small>{label}</small>
+    </button>
   );
 }
