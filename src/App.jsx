@@ -6,6 +6,7 @@ import { backupFileName, buildPortableBackup, parsePortableBackup } from "./stor
 import { buildSaveBlob, hashKey, mergeBlob } from "./storage/sync.js";
 import { DEFAULT_PROFILE, DEFAULT_SETTINGS, loadSaveState, saveKey } from "./storage/saveStore.js";
 import { dueItems } from "./practice/srs.js";
+import { clearWeakConceptRecord, dueWeakConcepts, normalizeWeakConcept } from "./practice/reviewEngine.js";
 import Dashboard from "./screens/Dashboard.jsx";
 import Papers from "./screens/Papers.jsx";
 import McqPractice from "./screens/McqPractice.jsx";
@@ -66,7 +67,13 @@ export default function App() {
       setSeqAnswers(state.seqAnswers);
       setCases(state.cases);
       setLog(state.log);
-      setWeakConcepts(state.weakConcepts);
+      const loadedAttempts = state.attempts || {};
+      const loadedWeakConcepts = Object.fromEntries(
+        Object.entries(state.weakConcepts || {})
+          .map(([id, record]) => [id, normalizeWeakConcept(record, loadedAttempts[record?.sourceItemId || record?.id])])
+          .filter(([, record]) => record)
+      );
+      setWeakConcepts(loadedWeakConcepts);
       setFocus(state.focus);
       setReady(true);
     });
@@ -88,28 +95,40 @@ export default function App() {
   const addWeakConcept = React.useCallback((wc) => {
     if (!wc) return;
     setWeakConcepts(prev => {
-      const existing = prev[wc.id];
-      const count = (existing?.count || 0) + 1;
-      return {
-        ...prev,
-        [wc.id]: {
-          id: wc.id,
-          sourceItemId: wc.id,
-          kind: wc.kind,
-          subject: wc.subject,
-          topic: wc.linkedTopics?.[0] || wc.subject || "General",
-          weakness: wc.weakReason,
-          mistakePattern: wc.weakReason,
-          recallQuestion: wc.recallQ,
-          answer: "",
-          linkedTopics: wc.linkedTopics || [],
-          graphUpdates: wc.graphUpdates || [],
-          due: wc.srs?.due || (Date.now() + 86400000),
-          createdAt: existing?.createdAt || Date.now(),
-          updatedAt: Date.now(),
-          count,
-        }
-      };
+      const now = Date.now();
+      const existing = normalizeWeakConcept(prev[wc.id], null, now);
+      const normalized = normalizeWeakConcept({
+        ...existing,
+        ...wc,
+        id: wc.id,
+        sourceItemId: wc.sourceItemId || wc.id,
+        topic: wc.linkedTopics?.[0] || wc.subject || existing?.topic || "General",
+        weakness: wc.weakReason || wc.weakness || existing?.weakness,
+        mistakePattern: wc.weakReason || wc.mistakePattern || existing?.mistakePattern,
+        recallQuestion: wc.recallQ || wc.recallQuestion || existing?.recallQuestion,
+        status: "active",
+        clearedAt: null,
+        lastReviewedAt: existing?.lastReviewedAt || null,
+        createdAt: existing?.createdAt || now,
+        updatedAt: now,
+        count: (existing?.count || 0) + 1,
+      }, null, now);
+      return { ...prev, [normalized.id]: normalized };
+    });
+  }, []);
+
+  const clearWeakConcept = React.useCallback((id) => {
+    if (!id) return;
+    setWeakConcepts(prev => {
+      const existing = prev[id];
+      const cleared = clearWeakConceptRecord(existing);
+      if (!cleared) return prev;
+      return { ...prev, [id]: cleared };
+    });
+    setAttempts(prev => {
+      const existing = prev[id];
+      if (!existing) return prev;
+      return { ...prev, [id]: { ...existing, weak: false, needsReview: false } };
     });
   }, []);
 
@@ -147,7 +166,9 @@ export default function App() {
   }, [papers]);
 
   const startDrill = () => {
-    const candidates = [...dueItems(attempts), ...Object.values(attempts).filter(a => a.weak)];
+    const weakDrillItems = dueWeakConcepts(weakConcepts, attempts)
+      .map(wc => attempts[wc.sourceItemId] || { ...wc, id: wc.sourceItemId });
+    const candidates = [...dueItems(attempts), ...Object.values(attempts).filter(a => a.weak), ...weakDrillItems];
     const seen = new Set();
     const drillQuestions = [];
     for (const item of candidates) {
@@ -161,6 +182,7 @@ export default function App() {
 
   const recordAttempt = (question, paper, result, srs) => {
     const now = Date.now();
+    if (result.correct === true) clearWeakConcept(question.id);
     setAttempts(prev => ({
       ...prev,
       [question.id]: {
@@ -189,6 +211,7 @@ export default function App() {
 
   const recordSeq = (question, paper, percent, srs) => {
     const now = Date.now();
+    if (percent != null && percent >= 70) clearWeakConcept(question.id);
     setAttempts(prev => ({
       ...prev,
       [question.id]: {
@@ -285,7 +308,7 @@ export default function App() {
     atlas: <TopicAtlas attempts={attempts} onDrill={startDrill} onTab={setTab} onStartFocus={handleStartFocus} />,
     focus: <FocusClinic focus={focus} setFocus={setFocus} onTab={setTab} onLogOutput={handleFocusLog} presetData={focusPresetData} setPresetData={setFocusPresetData} papers={papers} attempts={attempts} recordAttempt={recordAttempt} />,
     graph: <Graph graph={graph} />,
-    review: <Review attempts={attempts} onDrill={startDrill} weakConcepts={weakConcepts} />,
+    review: <Review attempts={attempts} onDrill={startDrill} weakConcepts={weakConcepts} onClearWeakConcept={clearWeakConcept} />,
     settings: <Settings settings={settings} setSettings={setSettings} syncStatus={syncStatus} onSync={doSync} onExport={exportBackup} onImport={importBackup} />,
   }[tab];
 
