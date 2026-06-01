@@ -8,10 +8,11 @@
     "dev:local": "node ../node_modules/vite/bin/vite.js --host 0.0.0.0 --port 4175",
     "build": "vite build",
     "build:local": "node ../node_modules/vite/bin/vite.js build",
-    "preview": "vite preview --host 0.0.0.0 --port 4175",
+    "preview": "npm run build && wrangler dev",
     "preview:local": "node ../node_modules/vite/bin/vite.js preview --host 0.0.0.0 --port 4175",
     "test": "node --test tests/*.test.mjs",
-    "smoke": "node scripts/smoke-server.mjs"
+    "smoke": "node scripts/smoke-server.mjs",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@vitejs/plugin-basic-ssl": "^2.3.0",
@@ -25,5 +26,9 @@
   "engines": {
     "node": ">=20.19.0"
   },
-  "packageManager": "npm@11.4.2"
+  "packageManager": "npm@11.4.2",
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.39.1",
+    "wrangler": "^4.96.0"
+  }
 }
